@@ -1,0 +1,25 @@
+name: Generate Logistics Data
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'  # Every 30 minutes
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      
+      - name: Install dependencies
+        run: pip install psycopg2-binary
+      
+      - name: Run simulator
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: python data_simulator.py
